@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocol name="webos_extension">
+  <interface name="wl_webos_xinput" version="1">
+    <request name="invoke_action">
+      <arg name="keysym" type="uint"/>
+      <arg name="symbol_type" type="uint"/>
+      <arg name="event_type" type="uint"/>
+    </request>
+    <request name="activated">
+      <arg name="type" type="string"/>
+    </request>
+    <request name="deactivated">
+    </request>
+    <event name="activation_request">
+      <arg name="type" type="string"/>
+    </event>
+    <event name="deactivated">
+    </event>
+  </interface>
+  <interface name="wl_webos_xinput_extension" version="1">
+    <request name="register_input">
+      <arg name="id" type="new_id" interface="wl_webos_xinput"/>
+    </request>
+  </interface>
+</protocol>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocol name="input_method">
+  <interface name="input_method_context" version="1">
+    <request name="destroy" type="destructor">
+    </request>
+    <request name="commit_string">
+      <arg name="serial" type="uint"/>
+      <arg name="text" type="string"/>
+    </request>
+    <request name="preedit_string">
+      <arg name="serial" type="uint"/>
+      <arg name="text" type="string"/>
+      <arg name="commit" type="string"/>
+    </request>
+    <request name="preedit_styling">
+      <arg name="serial" type="uint"/>
+      <arg name="index" type="uint"/>
+      <arg name="length" type="uint"/>
+      <arg name="style" type="uint"/>
+    </request>
+    <request name="preedit_cursor">
+      <arg name="serial" type="uint"/>
+      <arg name="index" type="int"/>
+    </request>
+    <request name="delete_surrounding_text">
+      <arg name="serial" type="uint"/>
+      <arg name="index" type="int"/>
+      <arg name="length" type="uint"/>
+    </request>
+    <request name="cursor_position">
+      <arg name="serial" type="uint"/>
+      <arg name="index" type="int"/>
+      <arg name="anchor" type="int"/>
+    </request>
+    <request name="modifiers_map">
+      <arg name="map" type="array"/>
+    </request>
+    <request name="keysym">
+      <arg name="serial" type="uint"/>
+      <arg name="time" type="uint"/>
+      <arg name="sym" type="uint"/>
+      <arg name="state" type="uint"/>
+      <arg name="modifiers" type="uint"/>
+    </request>
+    <request name="grab_keyboard">
+      <arg name="keyboard" type="new_id" interface="wl_keyboard"/>
+    </request>
+    <request name="key">
+      <arg name="serial" type="uint"/>
+      <arg name="time" type="uint"/>
+      <arg name="key" type="uint"/>
+      <arg name="state" type="uint"/>
+    </request>
+    <request name="modifiers">
+      <arg name="serial" type="uint"/>
+      <arg name="mods_depressed" type="uint"/>
+      <arg name="mods_latched" type="uint"/>
+      <arg name="mods_locked" type="uint"/>
+      <arg name="group" type="uint"/>
+    </request>
+    <event name="surrounding_text">
+      <arg name="text" type="string"/>
+      <arg name="cursor" type="uint"/>
+      <arg name="anchor" type="uint"/>
+    </event>
+    <event name="reset">
+      <arg name="serial" type="uint"/>
+    </event>
+    <event name="content_type">
+      <arg name="hint" type="uint"/>
+      <arg name="purpose" type="uint"/>
+    </event>
+    <event name="invoke_action">
+      <arg name="button" type="uint"/>
+      <arg name="index" type="uint"/>
+    </event>
+    <event name="commit">
+    </event>
+  </interface>
+  <interface name="input_method" version="1">
+    <event name="activate">
+      <arg name="id" type="new_id" interface="input_method_context"/>
+      <arg name="serial" type="uint"/>
+    </event>
+    <event name="deactivate">
+      <arg name="context" type="object" interface="input_method_context"/>
+    </event>
+  </interface>
+  <interface name="input_panel" version="1">
+    <request name="get_input_panel_surface">
+      <arg name="id" type="new_id" interface="input_panel_surface"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+  </interface>
+  <interface name="input_panel_surface" version="1">
+    <request name="set_toplevel">
+      <arg name="position" type="uint"/>
+    </request>
+  </interface>
+</protocol>

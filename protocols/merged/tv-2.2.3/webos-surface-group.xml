@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocol name="webos_surface_group">
+  <interface name="wl_webos_surface_group_compositor" version="1">
+    <request name="create_surface_group">
+      <arg name="id" type="new_id" interface="wl_webos_surface_group"/>
+      <arg name="parent" type="object" interface="wl_surface"/>
+      <arg name="name" type="string"/>
+    </request>
+    <request name="get_surface_group">
+      <arg name="id" type="new_id" interface="wl_webos_surface_group"/>
+      <arg name="name" type="string"/>
+    </request>
+  </interface>
+  <interface name="wl_webos_surface_group" version="1">
+    <request name="create_layer">
+      <arg name="id" type="new_id" interface="wl_webos_surface_group_layer"/>
+      <arg name="name" type="string"/>
+      <arg name="z_index" type="int"/>
+    </request>
+    <request name="attach">
+      <arg name="surface" type="object" interface="wl_surface"/>
+      <arg name="layer_name" type="string"/>
+    </request>
+    <request name="attach_anonymous">
+      <arg name="surface" type="object" interface="wl_surface"/>
+      <arg name="z_hint" type="uint"/>
+    </request>
+    <request name="allow_anonymous_layers">
+      <arg name="allow" type="uint"/>
+    </request>
+    <request name="detach">
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+    <request name="destroy" type="destructor">
+    </request>
+    <event name="owner_destroyed">
+    </event>
+  </interface>
+  <interface name="wl_webos_surface_group_layer" version="1">
+    <request name="set_z_index">
+      <arg name="z_index" type="int"/>
+    </request>
+    <request name="destroy" type="destructor">
+    </request>
+  </interface>
+</protocol>
