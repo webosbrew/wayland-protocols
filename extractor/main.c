@@ -11,11 +11,15 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Usage: %s <library> <protocol-name>\n", argv[0]);
         return 1;
     }
+    if (dlopen("libwayland-client.so.0", RTLD_GLOBAL | RTLD_NOW) == NULL) {
+        fprintf(stderr, "Failed to load libwayland-client.so.0: %s\n", dlerror());
+        return 1;
+    }
     void *lib_handle;
     if ((lib_handle = dlopen(argv[1], RTLD_GLOBAL | RTLD_NOW)) != NULL) {
         fprintf(stderr, "Loaded %s\n", argv[1]);
     } else {
-        fprintf(stderr, "Failed to load %s\n", argv[1]);
+        fprintf(stderr, "Failed to load %s: %s\n", argv[1], dlerror());
         return 1;
     }
     struct link_map *link_map = NULL;

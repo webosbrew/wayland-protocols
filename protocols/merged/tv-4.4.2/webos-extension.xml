@@ -1,24 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <protocol name="webos_extension">
   <interface name="wl_webos_xinput" version="1">
+    <description summary="interface for adding extended inputs">
+      xinput stands for an extended input which allows a client
+      to pass an input event to another client.
+    </description>
+    <enum name="event_type">
+      <description summary="the type of the event">
+        Describes the type of the event. &quot;press_and_release&quot;
+        means the compositor will send a released event after
+        a pressed event automatically.
+      </description>
+      <entry name="press_and_release" value="0"/>
+      <entry name="press" value="1"/>
+      <entry name="release" value="2"/>
+    </enum>
     <request name="invoke_action">
+      <description summary="invokes an action">
+        Requests to invoke an action by passing a keysym.
+      </description>
       <arg name="keysym" type="uint"/>
       <arg name="symbol_type" type="uint"/>
       <arg name="event_type" type="uint"/>
     </request>
     <request name="activated">
+      <description summary="activated">
+        Notifies the compositor this input has been activated.
+      </description>
       <arg name="type" type="string"/>
     </request>
     <request name="deactivated">
+      <description summary="deactivated">
+        Notifies the compositor this input has been deactivated.
+      </description>
     </request>
     <event name="activation_request">
+      <description summary="requests activation">
+        Requests that the method matching the argument string
+        is activated. The method is responsible for replying
+        back with the activated request. Currently supported
+        methods are: &quot;voice&quot;, &quot;screen_remote&quot;, &quot;hot_key_XXXX&quot;
+        NOTE: All the registered methods will get the activation
+        request and thus the client is responsible for performing
+        filtering and activating itself when it knows that it can
+        handle the type.
+      </description>
       <arg name="type" type="string"/>
     </event>
     <event name="deactivated">
+      <description summary="request to deactivate">
+        Requests the client to deactivate this input.
+      </description>
     </event>
+    <enum name="keysym_type">
+      <description summary="the type for the symbol">
+        Describes the type of the symbol. The compositor will
+        do the necessary conversion before sending it the the
+        current fullscreen surface
+      </description>
+      <entry name="qt" value="1"/>
+      <entry name="native" value="2"/>
+    </enum>
   </interface>
   <interface name="wl_webos_xinput_extension" version="1">
+    <description summary="interface for registering a new xinput extension">
+      This interface is used for registering a new xinput extension.
+    </description>
     <request name="register_input">
+      <description summary="register input">
+        Registers a new xinput.
+      </description>
       <arg name="id" type="new_id" interface="wl_webos_xinput"/>
     </request>
   </interface>

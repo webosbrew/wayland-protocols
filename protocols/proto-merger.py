@@ -26,6 +26,14 @@ def signature_matches(request_a: Element, request_b: Element) -> bool:
     return True
 
 
+def next_tag(el: Element) -> Optional[Element]:
+    while el:
+        el = el.nextSibling
+        if el.nodeType == el.ELEMENT_NODE:
+            return el
+    return None
+
+
 for ver_dir in dumped_dir.iterdir():
     ver_interfaces: Set[Element] = set(load_interfaces(ver_dir.joinpath('webos.xml')))
     merged_dir = protos_dir.joinpath('merged', ver_dir.name)
@@ -46,16 +54,20 @@ for ver_dir in dumped_dir.iterdir():
         root_out.setAttribute('name', template.getAttribute('name'))
         doc_out.appendChild(root_out)
         has_interface: bool = False
-        for interface in template.getElementsByTagName('interface'):
+        if_template: Element
+        for if_template in template.getElementsByTagName('interface'):
             def find_message(name: str, msg_type: Literal['request'] or Literal['event']) -> Optional[Element]:
-                return next(filter(lambda e: e.getAttribute('name') == name, interface.getElementsByTagName(msg_type)),
+                return next(filter(lambda e: e.getAttribute('name') == name, if_template.getElementsByTagName(msg_type)),
                             None)
 
-            if_name = interface.getAttribute('name')
+            if_name = if_template.getAttribute('name')
             if_tv = pop_interface(if_name)
             if not if_tv:
                 continue
             if_added: Element = root_out.appendChild(doc_out.importNode(if_tv, True))
+            if_desc_template = if_template.getElementsByTagName('description').item(0)
+            if if_desc_template:
+                if_added.insertBefore(doc_out.importNode(if_desc_template, True), if_added.firstChild)
 
             def populate_messages(msg_type: Literal['request'] or Literal['event']):
                 message: Element
@@ -68,11 +80,29 @@ for ver_dir in dumped_dir.iterdir():
                     args_template: List[Element] = msg_template.getElementsByTagName('arg')
                     if not signature_matches(message, msg_template):
                         continue
+                    desc_template = msg_template.getElementsByTagName('description').item(0)
+                    if desc_template:
+                        message.insertBefore(doc_out.importNode(desc_template, True), message.firstChild)
                     for arg, arg_template in zip(args, args_template):
                         arg.setAttribute('name', arg_template.getAttribute('name'))
 
             populate_messages('request')
             populate_messages('event')
+
+            def find_insert_before(el_type: str, name: str) -> Element:
+                return next(filter(lambda e: e.getAttribute('name') == name, if_added.getElementsByTagName(el_type)),
+                            None)
+
+            enum: Element
+            for enum in if_template.getElementsByTagName('enum'):
+                next_sibling: Optional[Element] = next_tag(enum)
+                imported = doc_out.importNode(enum, True)
+                insert_before = find_insert_before(next_sibling.nodeName,
+                                                   next_sibling.getAttribute('name')) if next_sibling else None
+                if insert_before:
+                    if_added.insertBefore(imported, insert_before)
+                elif next_sibling:
+                    if_added.appendChild(imported)
 
             has_interface = True
         if not has_interface:
