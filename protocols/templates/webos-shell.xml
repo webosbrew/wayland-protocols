@@ -19,6 +19,35 @@
     SPDX-License-Identifier: Apache-2.0
   </copyright>
 
+  <interface name="wl_webos_system_pip" version="1">
+    <description summary="(DO NOT USE) interface for webOS system PIP">
+      Deprecated system PIP (picture-in-picture) interface. It has been removed since webOS 4.0.
+    </description>
+    <request name="attach_app">
+      <arg name="p0" type="string"/>
+    </request>
+    <request name="set_geometry">
+      <arg name="p0" type="int"/>
+      <arg name="p1" type="int"/>
+      <arg name="p2" type="uint"/>
+      <arg name="p3" type="uint"/>
+    </request>
+    <request name="show">
+    </request>
+    <request name="hide">
+    </request>
+    <request name="detach">
+    </request>
+    <request name="set_fullscreen">
+    </request>
+    <event name="shown">
+    </event>
+    <event name="dismissed">
+    </event>
+    <event name="clicked">
+    </event>
+  </interface>
+
   <interface name="wl_webos_shell" version="2">
     <description summary="interface for webOS shell">
       This interface provides handlings on webOS shell surfaces.
