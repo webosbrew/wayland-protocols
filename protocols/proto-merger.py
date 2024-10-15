@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 from pathlib import Path
 from typing import Set, Optional, List, Literal
 from xml.dom import minidom
